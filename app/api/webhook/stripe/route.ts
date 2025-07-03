@@ -13,33 +13,25 @@ export async function POST(req: NextRequest) {
   const body = await req.text();
   const signature = (await headers()).get("stripe-signature") as string;
 
-  console.log("--- Webhook Received ---");
-  console.log("Signature:", signature);
-  console.log(
-    "Webhook Secret (from env):",
-    webhookSecret ? "Loaded" : "NOT LOADED"
-  );
-
   let event: Stripe.Event;
 
   try {
     event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
-  } catch (error: any) {
-    console.error("Webhook signature verification failed!", error.message);
-    return new NextResponse(`Webhook responce ${error.message}`, {
+  } catch (error) {
+    let err = "Unknown error";
+
+    if (error instanceof Error) {
+      err = error.message;
+    }
+    console.error("Webhook signature verification failed!", err);
+    return new NextResponse(`Webhook responce ${err}`, {
       status: 400,
     });
   }
 
   const session = event.data.object as Stripe.Checkout.Session;
 
-  console.log("✅ Webhook verified successfully!");
-  console.log("Event Type:", event.type);
-
   if (event.type === "checkout.session.completed") {
-    console.log("Processing checkout.session.completed event.");
-    console.log("Metadata:", session?.metadata);
-
     const userId = session?.metadata?.userId;
     if (!userId) {
       console.error("No userId in metadata!");
@@ -48,17 +40,6 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
-
-    console.log(`Found userId: ${userId}. Attempting to update user...`);
-
-    // await prisma.user.update({
-    //   where: {
-    //     id: session.metadata.userId,
-    //   },
-    //   data: {
-    //     isPremium: true,
-    //   },
-    // });
 
     try {
       await prisma.user.update({
@@ -69,7 +50,6 @@ export async function POST(req: NextRequest) {
           isPremium: true,
         },
       });
-      console.log(`Successfully updated user ${userId} to premium.`);
     } catch (dbError) {
       console.error(`Database update failed for user ${userId}:`, dbError);
       return new NextResponse("Database error during user update", {
