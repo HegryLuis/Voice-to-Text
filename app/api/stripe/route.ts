@@ -3,13 +3,13 @@ import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { prisma } from "@/lib/db";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-  apiVersion: "2025-06-30.basil",
-});
-
 const returnUrl = `http://localhost:3000/dashboard`;
 
 export async function GET(req: NextRequest) {
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
+    apiVersion: "2025-06-30.basil",
+  });
+
   try {
     const { userId } = getAuth(req);
 

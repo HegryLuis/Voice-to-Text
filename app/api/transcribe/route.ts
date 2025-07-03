@@ -5,11 +5,11 @@ import { prisma } from "@/lib/db";
 
 const FREE_TIER_LIMIT = 2;
 
-const client = new AssemblyAI({
-  apiKey: process.env.ASSEMBLYAI_API_KEY as string,
-});
-
 export async function POST(req: NextRequest) {
+  const client = new AssemblyAI({
+    apiKey: process.env.ASSEMBLYAI_API_KEY as string,
+  });
+
   try {
     const { userId } = getAuth(req);
 
