@@ -14,7 +14,7 @@ export default function TranscriptionList({
   isPremium,
 }: TranscriptionListProps) {
   return (
-    <div className="mt-10 bg-white p-8 rounded-lg shadow-md w-full max-w-md mx-auto flex flex-col">
+    <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md mx-auto flex flex-col h-[550px]">
       <h2 className="text-2xl font-bold mb-5 text-gray-800 text-center">
         Your History
       </h2>
@@ -29,7 +29,9 @@ export default function TranscriptionList({
         {transcriptions.length > 0 ? (
           transcriptions.map((item) => (
             <div key={item.id} className="p-4 border rounded-md">
-              <p className="text-gray-600">{item.text}</p>
+              <p className="text-gray-600 whitespace-pre-wrap text-sm">
+                {item.text}
+              </p>
               <p className="text-xs text-gray-400 mt-2">
                 {new Date(item.createdAt).toLocaleString()}
               </p>

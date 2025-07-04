@@ -3,6 +3,13 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+const supportedLanguages = [
+  { code: "auto", name: "Auto" },
+  { code: "en", name: "English" },
+  { code: "uk", name: "Ukrainian" },
+  // ...
+];
+
 interface UploadComponentProps {
   isPremium: boolean;
 }
@@ -13,6 +20,7 @@ export default function UploadComponent({ isPremium }: UploadComponentProps) {
   const [isRedirecting, setIsRedirecting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [transcription, setTranscription] = useState<string | null>(null);
+  const [language, setLanguage] = useState("auto");
 
   const router = useRouter();
 
@@ -52,6 +60,7 @@ export default function UploadComponent({ isPremium }: UploadComponentProps) {
 
     const formData = new FormData();
     formData.append("file", file);
+    formData.append("language", language);
 
     try {
       const response = await fetch("/api/transcribe", {
@@ -88,7 +97,7 @@ export default function UploadComponent({ isPremium }: UploadComponentProps) {
   };
 
   return (
-    <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md mx-auto max-h-[500px]">
+    <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md mx-auto max-h-[550px]">
       <div className="flex justify-between items-start mb-6">
         <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
           Upload Your Audio
@@ -103,7 +112,29 @@ export default function UploadComponent({ isPremium }: UploadComponentProps) {
           </button>
         )}
       </div>
+
       <form onSubmit={handleSubmit}>
+        <div className="mb-4">
+          <label
+            htmlFor="language-select"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Audio Language
+          </label>
+          <select
+            id="language-select"
+            value={language}
+            onChange={(e) => setLanguage(e.target.value)}
+            className="block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          >
+            {supportedLanguages.map((lang) => (
+              <option key={lang.code} value={lang.code}>
+                {lang.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
         <div className="mb-4">
           <input
             type="file"
