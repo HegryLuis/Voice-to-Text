@@ -3,7 +3,9 @@ import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { prisma } from "@/lib/db";
 
-const returnUrl = `http://localhost:3000/dashboard`;
+const apiUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+
+const returnUrl = `${apiUrl}/dashboard`;
 
 export async function GET(req: NextRequest) {
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
