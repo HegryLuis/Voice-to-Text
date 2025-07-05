@@ -13,8 +13,8 @@ interface HomeComponentProps {
 
 export default function HomeComponent({ isPremium }: HomeComponentProps) {
   const background = isPremium
-    ? "bg-gradient-to-br from-indigo-200 via-purple-200 to-pink-200"
-    : "bg-gradient-to-r from-blue-400 to-purple-500";
+    ? "bg-gradient-to-br from-yellow-200 via-amber-300 to-orange-200"
+    : "bg-gradient-to-br from-indigo-200 via-purple-200 to-pink-200";
 
   const textClasses = isPremium ? "text-black" : "text-white";
 
@@ -24,6 +24,21 @@ export default function HomeComponent({ isPremium }: HomeComponentProps) {
     >
       <SignedIn>
         <div className="absolute top-6 right-6 z-10">
+          {isPremium && (
+            <div
+              className="absolute -top-4.5 -left-2 transform -rotate-12"
+              title="Premium Account"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="w-8 h-8 drop-shadow-md text-black"
+              >
+                <path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7z" />
+              </svg>
+            </div>
+          )}
           <UserButton />
         </div>
       </SignedIn>

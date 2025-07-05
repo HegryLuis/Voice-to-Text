@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import React, { useState, useRef } from "react";
 
 const supportedLanguages = [
   { code: "auto", name: "Auto" },
@@ -20,12 +20,16 @@ export default function UploadComponent({
   count,
 }: UploadComponentProps) {
   const [file, setFile] = useState<File | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isRedirecting, setIsRedirecting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [transcription, setTranscription] = useState<string | null>(null);
   const [language, setLanguage] = useState("auto");
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
   const [isSelectOpen, setIsSelectOpen] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const router = useRouter();
 
@@ -101,17 +105,44 @@ export default function UploadComponent({
     }
   };
 
-  const cardClasses = isPremium
-    ? "bg-white/30 backdrop-blur-lg border border-white/20 text-slate-800 shadow-2xl"
-    : "bg-white text-gray-800 shadow-lg";
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
 
-  const itemCardClasses = isPremium ? "text-slate-800" : "text-gray-700";
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(false);
+
+    const files = e.dataTransfer.files;
+
+    if (files && files[0]) {
+      if (files[0].type.startsWith("audio/")) {
+        setFile(files[0]);
+      } else {
+        setError("Please, drop an audio file");
+      }
+    }
+  };
+
+  const cardClasses = isPremium
+    ? "bg-white/50 backdrop-blur-xl border border-white/30 shadow-2xl rounded-3xl"
+    : "bg-white shadow-lg rounded-2xl";
+
+  const itemCardClasses = isPremium
+    ? "bg-white/30 border-white/20 rounded-xl"
+    : "text-gray-700";
 
   const textColor = isPremium ? "text-slate-800" : "text-gray-700";
 
   return (
     <div
-      className={`bg-white p-8 rounded-lg shadow-md w-full max-w-md mx-auto max-h-[550px] ${cardClasses}`}
+      className={`bg-white p-6 rounded-lg shadow-md w-full max-w-md mx-auto max-h-[600px] ${cardClasses}`}
     >
       <div className="flex justify-between items-start">
         <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
@@ -121,7 +152,7 @@ export default function UploadComponent({
           <button
             onClick={handleGetPremium}
             disabled={isRedirecting}
-            className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white font-semibold py-2 px-4 rounded-md hover:from-yellow-500 hover:to-orange-600 disabled:opacity-50 disabled:cursor-not-allowed text-sm shadow-md transition-transform transform hover:scale-105"
+            className="cursor-pointer bg-gradient-to-r from-yellow-400 to-orange-500 text-white font-semibold py-2 px-4 rounded-md hover:from-yellow-500 hover:to-orange-600 disabled:opacity-50 disabled:cursor-not-allowed text-sm shadow-md transition-transform transform hover:scale-105"
           >
             {isRedirecting ? "Redirecting..." : "Get Premium (1$)"}
           </button>
@@ -183,24 +214,69 @@ export default function UploadComponent({
           </div>
         </div>
 
-        <div className="mb-4">
-          <div className="cursor-pointer">
-            <input
-              type="file"
-              accept="audio/*"
-              onChange={handleFileChange}
-              className="block w-full text-sm text-gray-500 cursor-pointer
-                        file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 
-                        file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 
-                        hover:file:bg-blue-100"
-            />
+        <div>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="audio/*"
+            onChange={handleFileChange}
+            className="hidden"
+          />
+          <div
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            className={`mt-1 flex flex-col items-center justify-center w-full h-36 px-6 
+                       border-2 border-dashed rounded-xl transition-colors`}
+          >
+            <div className="text-center">
+              <svg
+                className={`mx-auto h-10 w-10 ${
+                  isPremium ? "text-slate-500" : "text-gray-400"
+                }`}
+                stroke="currentColor"
+                fill="none"
+                viewBox="0 0 48 48"
+                aria-hidden="true"
+              >
+                <path
+                  d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+
+              <p className={`mt-2 text-sm`}>
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="font-medium text-blue-500 hover:text-blue-400 focus:outline-none cursor-pointer"
+                >
+                  Upload a file
+                </button>{" "}
+                or drag and drop
+              </p>
+              <p
+                className={`text-xs ${
+                  isPremium ? "text-slate-500" : "text-gray-500"
+                }`}
+              >
+                MP3, WAV, M4A up to 10MB
+              </p>
+              {file && (
+                <p className="text-sm font-semibold text-green-500 mt-2">
+                  Selected: {file.name}
+                </p>
+              )}
+            </div>
           </div>
         </div>
 
         <button
           type="submit"
           disabled={isLoading || !file}
-          className={`w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:bg-gray-400 cursor-pointer ${textColor}`}
+          className={`w-full bg-blue-600 text-white mt-2 py-2 px-4 rounded-md hover:bg-blue-700 disabled:bg-gray-400 cursor-pointer ${textColor}`}
         >
           {isLoading ? "Transcribing..." : "Transcribe Audio"}
         </button>
@@ -209,7 +285,7 @@ export default function UploadComponent({
       {error && <p className="mt-4 text-red-500 text-center">{error}</p>}
 
       {transcription && (
-        <div className="mt-6 p-4 bg-gray-50 rounded-md border max-h-[200px] overflow-y-auto">
+        <div className="mt-6 p-4 bg-gray-50 rounded-md border max-h-[150px] overflow-y-auto">
           <h3 className="text-lg font-semibold text-gray-700 mb-2">
             Transcription Result:
           </h3>

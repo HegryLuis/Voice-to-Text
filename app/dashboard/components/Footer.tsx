@@ -3,19 +3,19 @@ import Link from "next/link";
 export default function Footer() {
   return (
     <footer className="pt-8 py-8 px-2 sm:px-6 lg:px-8">
-      <div className=" mx-auto flex flex-col sm:flex-row items-center gap-4">
+      <div className=" mx-auto flex flex-col sm:flex-row items-center gap-8 justify-end">
         <div className="align-center">
           <p className="text-sm text-black-600">Created by Danylo Drozdov</p>
           <p className="text-sm text-black-600">
             © 2025 Voice SaaS. All rights reserved.
           </p>
         </div>
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-3">
           <Link
             href="https://github.com/HegryLuis"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-gray-500 hover:text-gray-900 transition-colors p-1 bg-white rounded-full  hover:bg-transparent transition-200"
+            className="text-gray-300 hover:text-gray-900 transition-colors p-1 bg-gray-600 rounded-full  hover:bg-transparent transition-200"
             title="GitHub"
           >
             <svg
@@ -33,7 +33,7 @@ export default function Footer() {
             href="https://t.me/blind_anarkist"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-gray-500 hover:text-blue-500 transition-colors p-1 bg-white rounded-full hover:bg-transparent transition-200"
+            className="text-gray-300 hover:text-blue-500 transition-colors p-1 bg-gray-600 rounded-full hover:bg-transparent transition-200"
             title="Telegram"
           >
             <svg
