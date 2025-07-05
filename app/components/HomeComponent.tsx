@@ -13,7 +13,7 @@ interface HomeComponentProps {
 
 export default function HomeComponent({ isPremium }: HomeComponentProps) {
   const background = isPremium
-    ? "bg-gradient-to-br from-amber-200 via-yellow-500 to-amber-700"
+    ? "bg-gradient-to-br from-indigo-200 via-purple-200 to-pink-200"
     : "bg-gradient-to-r from-blue-400 to-purple-500";
 
   const textClasses = isPremium ? "text-black" : "text-white";

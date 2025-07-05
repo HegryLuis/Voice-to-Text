@@ -35,7 +35,7 @@ export default async function DashboardPage() {
   const { transcriptions, count, isPremium } = await getUserData();
 
   const background = isPremium
-    ? "bg-gradient-to-br from-amber-200 via-yellow-500 to-amber-700"
+    ? "bg-gradient-to-br from-indigo-200 via-purple-200 to-pink-200"
     : "bg-gradient-to-r from-blue-400 to-purple-500";
 
   return (
@@ -83,14 +83,14 @@ export default async function DashboardPage() {
             <div className="relative flex items-center justify-center">
               {isPremium && (
                 <div
-                  className="absolute -top-4.5 -left-1 transform -rotate-12"
+                  className="absolute -top-4.5 -left-2 transform -rotate-12"
                   title="Premium Account"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
                     fill="currentColor"
-                    className="w-8 h-8 drop-shadow-md text-black"
+                    className="w-8 h-8 drop-shadow-md text-amber-400"
                   >
                     <path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7z" />
                   </svg>
@@ -108,7 +108,10 @@ export default async function DashboardPage() {
             <Suspense
               fallback={<p className="text-center mt-4">Loading history...</p>}
             >
-              <TranscriptionList transcriptions={transcriptions} />
+              <TranscriptionList
+                transcriptions={transcriptions}
+                isPremium={isPremium}
+              />
             </Suspense>
           </div>
         </div>

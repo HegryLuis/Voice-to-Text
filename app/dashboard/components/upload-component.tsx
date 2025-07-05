@@ -101,8 +101,18 @@ export default function UploadComponent({
     }
   };
 
+  const cardClasses = isPremium
+    ? "bg-white/30 backdrop-blur-lg border border-white/20 text-slate-800 shadow-2xl"
+    : "bg-white text-gray-800 shadow-lg";
+
+  const itemCardClasses = isPremium ? "text-slate-800" : "text-gray-700";
+
+  const textColor = isPremium ? "text-slate-800" : "text-gray-700";
+
   return (
-    <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md mx-auto max-h-[550px]">
+    <div
+      className={`bg-white p-8 rounded-lg shadow-md w-full max-w-md mx-auto max-h-[550px] ${cardClasses}`}
+    >
       <div className="flex justify-between items-start">
         <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
           Upload Your Audio
@@ -120,11 +130,11 @@ export default function UploadComponent({
 
       {!isPremium &&
         (count > 2 ? (
-          <p className="mb-2 text-center">
+          <p className={`mb-2 text-center ${textColor}`}>
             You have made all free transcriptions.
           </p>
         ) : (
-          <p className="mb-2 text-center">
+          <p className={`mb-2 text-center ${textColor}`}>
             You have made {count} / 2 free transcriptions.
           </p>
         ))}
@@ -133,7 +143,7 @@ export default function UploadComponent({
         <div className="mb-4">
           <label
             htmlFor="language-select"
-            className="block text-sm font-medium text-gray-700 mb-2"
+            className={`block text-sm font-medium text-gray-700 mb-2 ${textColor}`}
           >
             Language to transcript
           </label>
@@ -146,9 +156,9 @@ export default function UploadComponent({
               id="language-select"
               value={language}
               onChange={(e) => setLanguage(e.target.value)}
-              className="peer block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm 
+              className={`peer block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm 
                           focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm 
-                          appearance-none cursor-pointer"
+                          appearance-none cursor-pointer ${itemCardClasses}`}
             >
               <option value="" disabled className="text-gray-400">
                 Please select a language...
@@ -190,7 +200,7 @@ export default function UploadComponent({
         <button
           type="submit"
           disabled={isLoading || !file}
-          className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:bg-gray-400 cursor-pointer"
+          className={`w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:bg-gray-400 cursor-pointer ${textColor}`}
         >
           {isLoading ? "Transcribing..." : "Transcribe Audio"}
         </button>
