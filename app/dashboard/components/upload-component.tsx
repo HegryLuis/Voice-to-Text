@@ -227,7 +227,13 @@ export default function UploadComponent({
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
             className={`mt-1 flex flex-col items-center justify-center w-full h-36 px-6 
-                       border-2 border-dashed rounded-xl transition-colors`}
+                       border-2 border-dashed rounded-xl transition-colors ${
+                         isDragging
+                           ? "border-blue-500 bg-blue-500/10"
+                           : isPremium
+                           ? "border-slate-600 hover:border-slate-500"
+                           : "border-gray-300 hover:border-gray-400"
+                       }`}
           >
             <div className="text-center">
               <svg

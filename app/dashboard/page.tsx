@@ -1,10 +1,8 @@
 import UploadComponent from "./components/upload-component";
 import { Suspense } from "react";
 import TranscriptionList from "./components/transcription-list";
-import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/db";
-import { UserButton } from "@clerk/nextjs";
 import Footer from "./components/Footer";
 import DashboardHeader from "./components/dashboard-header";
 
