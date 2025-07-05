@@ -12,15 +12,20 @@ const supportedLanguages = [
 
 interface UploadComponentProps {
   isPremium: boolean;
+  count: number;
 }
 
-export default function UploadComponent({ isPremium }: UploadComponentProps) {
+export default function UploadComponent({
+  isPremium,
+  count,
+}: UploadComponentProps) {
   const [file, setFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isRedirecting, setIsRedirecting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [transcription, setTranscription] = useState<string | null>(null);
   const [language, setLanguage] = useState("auto");
+  const [isSelectOpen, setIsSelectOpen] = useState(false);
 
   const router = useRouter();
 
@@ -98,7 +103,7 @@ export default function UploadComponent({ isPremium }: UploadComponentProps) {
 
   return (
     <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md mx-auto max-h-[550px]">
-      <div className="flex justify-between items-start mb-6">
+      <div className="flex justify-between items-start">
         <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
           Upload Your Audio
         </h2>
@@ -108,10 +113,21 @@ export default function UploadComponent({ isPremium }: UploadComponentProps) {
             disabled={isRedirecting}
             className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white font-semibold py-2 px-4 rounded-md hover:from-yellow-500 hover:to-orange-600 disabled:opacity-50 disabled:cursor-not-allowed text-sm shadow-md transition-transform transform hover:scale-105"
           >
-            {isRedirecting ? "Redirecting..." : "Get Premium"}
+            {isRedirecting ? "Redirecting..." : "Get Premium (1$)"}
           </button>
         )}
       </div>
+
+      {!isPremium &&
+        (count > 2 ? (
+          <p className="mb-2 text-center">
+            You have made all free transcriptions.
+          </p>
+        ) : (
+          <p className="mb-2 text-center">
+            You have made {count} / 2 free transcriptions.
+          </p>
+        ))}
 
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
@@ -119,34 +135,62 @@ export default function UploadComponent({ isPremium }: UploadComponentProps) {
             htmlFor="language-select"
             className="block text-sm font-medium text-gray-700 mb-2"
           >
-            Audio Language
+            Language to transcript
           </label>
-          <select
-            id="language-select"
-            value={language}
-            onChange={(e) => setLanguage(e.target.value)}
-            className="block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          <div
+            className="relative"
+            onClick={() => setIsSelectOpen(!isSelectOpen)}
+            onBlur={() => setIsSelectOpen(false)}
           >
-            {supportedLanguages.map((lang) => (
-              <option key={lang.code} value={lang.code}>
-                {lang.name}
+            <select
+              id="language-select"
+              value={language}
+              onChange={(e) => setLanguage(e.target.value)}
+              className="peer block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm 
+                          focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm 
+                          appearance-none cursor-pointer"
+            >
+              <option value="" disabled className="text-gray-400">
+                Please select a language...
               </option>
-            ))}
-          </select>
+              {supportedLanguages.map((lang) => (
+                <option key={lang.code} value={lang.code}>
+                  {lang.name}
+                </option>
+              ))}
+            </select>
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+              <svg
+                className={`fill-current h-4 w-4 transition-transform duration-200 ${
+                  isSelectOpen ? "rotate-180" : ""
+                }`}
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+              >
+                <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+              </svg>
+            </div>
+          </div>
         </div>
 
         <div className="mb-4">
-          <input
-            type="file"
-            accept="audio/*"
-            onChange={handleFileChange}
-            className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-          />
+          <div className="cursor-pointer">
+            <input
+              type="file"
+              accept="audio/*"
+              onChange={handleFileChange}
+              className="block w-full text-sm text-gray-500 cursor-pointer
+                        file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 
+                        file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 
+                        hover:file:bg-blue-100"
+            />
+          </div>
         </div>
+
         <button
           type="submit"
           disabled={isLoading || !file}
-          className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:bg-gray-400"
+          className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:bg-gray-400 cursor-pointer"
         >
           {isLoading ? "Transcribing..." : "Transcribe Audio"}
         </button>
