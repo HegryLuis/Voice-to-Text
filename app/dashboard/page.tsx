@@ -34,7 +34,7 @@ export default async function DashboardPage() {
   const { transcriptions, count, isPremium } = await getUserData();
 
   const background = isPremium
-    ? "bg-gradient-to-br from-yellow-200 via-amber-300 to-orange-200"
+    ? "bg-gradient-to-br from-yellow-200 via-amber-200 to-orange-200"
     : "bg-gradient-to-br from-indigo-200 via-purple-200 to-pink-200";
 
   return (

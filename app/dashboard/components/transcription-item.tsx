@@ -38,7 +38,7 @@ export default function TranscriptionItem({
       {isTooLong && (
         <button
           onClick={() => setIsExpanded(!isExpanded)}
-          className={`text-xs font-semibold mt-3 ${"text-blue-400 hover:text-blue-300"}`}
+          className={`text-xs font-semibold mt-3 ${"text-blue-400 hover:text-blue-300"} cursor-pointer`}
         >
           {isExpanded ? "Show less" : "Show more..."}
         </button>

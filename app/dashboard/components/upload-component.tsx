@@ -189,13 +189,17 @@ export default function UploadComponent({
               onChange={(e) => setLanguage(e.target.value)}
               className={`peer block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm 
                           focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm 
-                          appearance-none cursor-pointer ${itemCardClasses}`}
+                          appearance-none cursor-pointer text-black ${itemCardClasses}`}
             >
-              <option value="" disabled className="text-gray-400">
+              <option value="" disabled className="text-slate-400">
                 Please select a language...
               </option>
               {supportedLanguages.map((lang) => (
-                <option key={lang.code} value={lang.code}>
+                <option
+                  key={lang.code}
+                  value={lang.code}
+                  className="text-slate-600"
+                >
                   {lang.name}
                 </option>
               ))}
@@ -226,8 +230,9 @@ export default function UploadComponent({
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
+            onClick={() => fileInputRef.current?.click()}
             className={`mt-1 flex flex-col items-center justify-center w-full h-36 px-6 
-                       border-2 border-dashed rounded-xl transition-colors ${
+                       border-2 border-dashed rounded-xl transition-colors cursor-pointer ${
                          isDragging
                            ? "border-blue-500 bg-blue-500/10"
                            : isPremium
@@ -253,10 +258,9 @@ export default function UploadComponent({
                 />
               </svg>
 
-              <p className={`mt-2 text-sm`}>
+              <p className={`mt-2 text-sm text-slate-500`}>
                 <button
                   type="button"
-                  onClick={() => fileInputRef.current?.click()}
                   className="font-medium text-blue-500 hover:text-blue-400 focus:outline-none cursor-pointer"
                 >
                   Upload a file
