@@ -20,7 +20,7 @@ export default function HomeComponent({ isPremium }: HomeComponentProps) {
 
   return (
     <main
-      className={`relative flex min-h-screen flex-col items-center justify-center p-24 bg-gray-900 text-white ${background}`}
+      className={`relative flex min-h-screen flex-col items-center justify-center p-8 sm:p-12 md:p-16 lg:p-24 bg-gray-900 text-white ${background}`}
     >
       <SignedIn>
         <div className="absolute top-6 right-6 z-10">

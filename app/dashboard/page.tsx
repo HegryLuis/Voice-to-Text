@@ -39,16 +39,16 @@ export default async function DashboardPage() {
 
   return (
     <div
-      className={`w-full min-h-screen md:flex-row flex h-[100vh] ${background}`}
+      className={`w-full min-h-screen flex-col-reverse p-4 lg:flex-row flex lg:h-[100vh] ${background}`}
     >
-      <div className=" w-full md:w-2/5 p-4 md:p-6 lg:p-8">
+      <div className=" flex items-center justify-center w-full md:p-6">
         <TranscriptionList
           transcriptions={transcriptions}
           isPremium={isPremium}
         />
       </div>
 
-      <main className="flex flex-col justify-between w-[65%]">
+      <main className=" flex-grow w-full flex flex-col  justify-between w-[65%]">
         <div className="w-[100%]  flex flex-col">
           <DashboardHeader isPremium={isPremium} />
 
